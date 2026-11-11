@@ -382,6 +382,8 @@ internal class Program : IDisposable
             {
                 ManufacturedWeek = 1,
                 ManufacturedYear = 2026,
+		ManufacturerId = 0xD041,
+		ManufacturerProduct = 0x0001,
                 VideoInterface = Edid.InterfaceType.DisplayPort,
                 HorizontalScreenSize = 32,
                 VerticalScreenSize = 18,

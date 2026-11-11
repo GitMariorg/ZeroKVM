@@ -195,7 +195,15 @@ internal struct Edid
         }
 
         public bool InterlacedSignal { get => GetBit(_bits1, 63); init => SetBit(ref _bits1, 63, value); }
-        public bool DigitalSync { get => GetBit(_bits1, 60); init => SetBit(ref _bits1, 60, value); }
+        public bool DigitalSync
+        {
+            get => GetBit(_bits1, 60);
+            init
+            {
+                SetBit(ref _bits1, 60, value);
+                SetBit(ref _bits1, 59, value);
+            }
+        }
     }
 
     public enum MonitorDescriptorType : byte
