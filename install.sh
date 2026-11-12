@@ -52,11 +52,15 @@ install -m 0755 "$TMP/$ASSET" /usr/bin/zerokvm
 log "Бинарник установлен, SHA-256 проверен."
 
 [[ -f "$CONFIG" ]] || die "Не найден $CONFIG. Убедись, что установлена Raspberry Pi OS."
-if ! grep -Eq '^[[:space:]]*dtoverlay=dwc2([,[:space:]]|$)' "$CONFIG"; then
+if ! grep -Eq '^[[:space:]]*dtoverlay=dwc2,dr_mode=peripheral([,[:space:]]|$)' "$CONFIG"; then
     cp -a "$CONFIG" "$CONFIG.backup-zerokvm-$(date +%Y%m%d-%H%M%S)"
-    printf '\n# ZeroKVM: USB OTG device mode\ndtoverlay=dwc2,dr_mode=peripheral\n' >> "$CONFIG"
+    if grep -Eq '^[[:space:]]*dtoverlay=dwc2([,[:space:]]|$)' "$CONFIG"; then
+        sed -i -E 's|^[[:space:]]*dtoverlay=dwc2[^[:space:]]*|dtoverlay=dwc2,dr_mode=peripheral|' "$CONFIG"
+    else
+        printf '\n# ZeroKVM: USB OTG device mode\ndtoverlay=dwc2,dr_mode=peripheral\n' >> "$CONFIG"
+    fi
     REBOOT_REQUIRED=1
-    log "Добавлен USB OTG overlay в $CONFIG."
+    log "Настроен USB OTG overlay в $CONFIG."
 fi
 
 install -d -m 0755 /etc/modules-load.d
